@@ -17,7 +17,7 @@ for item in memoriaPrincipal:  #transforma os numeros em binários de 8 bits
 memoriaCache = []
 i = 0
 while i < tamCache:
-    memoriaCache.append("002222222222222222222222222222222222222")
+    memoriaCache.append(format(0,'039b'))
     i+= 1
 print("len",len(memoriaCache[0]))
 def polSubstituicao(linha):
@@ -44,7 +44,7 @@ def leitura (endereco):
     i = conjunto 
     aux = 0
     while i <= conjunto + 1 : # passa pelo conjunto da cache
-        if str(memoriaCache[i][2:7]) == str(endereco[:5]): # se o endereço está na memória cache
+        if (str(memoriaCache[i][2:7]) == str(endereco[:5])) and (memoriaCache[i][0] == "1"): # se o endereço está na memória cache
             global hits
             hits  = hits + 1
             aux += 1
@@ -96,12 +96,38 @@ def Escrita(endereco):
 
 
         
-
+def stats():
+    global hits
+    global misses
+    print("Hits :  ",hits)
+    print("Misses : ",misses)
+    print("Porcentagem de acerto: ",100/(hits+misses) * hits,"%")
 
             
 
-
-
+def exibir():
+    a = input("h para hexadecimal, d para decimal, b para Binário:")
+    if(a == "h"):
+        print("Memória principal")
+        for item in memoriaPrincipal:
+            print(format(item,'X'))
+        print("\n\nMemória Cache")
+        for item in memoriaCache:
+            print(format(int(item,2),'X'))
+    elif(a == "d"):
+        print("Memória principal")
+        for item in memoriaPrincipal:
+            print(format(item,'d'))
+        print("\n\nMemória Cache")
+        for item in memoriaCache:
+            print(format(int(item,2),'d'))
+    else:
+        print("Memória principal")
+        for item in memoriaPrincipal:
+            print(format(item,'08b'))
+        print("\n\nMemória Cache")
+        for item in memoriaCache:
+            print(format(int(item,2),'039b'))
  
 '''
 for item in memoriaPrincipal:    #printa em hexadecimal
@@ -114,27 +140,26 @@ while (cond != 5):
     cond = input()
     print(cond)
     if cond == "1":
+        clear()
         poxa = str(input("Digite o endereço a ser lido\n"))
         leitura(poxa)
         continue
     elif cond == "2":
+        clear()
         poxa = str(input("Digite o endereço a ser escrito\n"))
         Escrita(poxa)
         continue
     elif cond == "3":
+        clear()
         stats()
         continue
     elif cond == "4":
         clear()
-        print("Memória Principal:\n")
-        for item in memoriaPrincipal:
-            print(format(item,'08b'))
-        print("\n\nMemória Cache:\n")
-        for item in memoriaCache:
-            print(item)
+        exibir()
         continue
     elif cond == "5":
         break
     else:
+        clear()
         print("Opção inválida\n")
         continue
