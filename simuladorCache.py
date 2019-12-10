@@ -40,15 +40,16 @@ def polSubstituicao(linha):
 def leitura (endereco):
     print(endereco)
     conjunto = int(endereco[3:5],2)
-    print("conjunto",conjunto)
+    bloco = int(endereco[:5],2) # descobrindo o numero do bloco
     i = conjunto 
     aux = 0
     while i <= conjunto + 1 : # passa pelo conjunto da cache
         if (str(memoriaCache[i][2:7]) == str(endereco[:5])) and (memoriaCache[i][0] == "1"): # se o endereço está na memória cache
+            substituicao = i
             global hits
             hits  = hits + 1
             aux += 1
-            print("Bloco está na cache!")
+            print("Hit!\n")
             inteiro = int(endereco[5:],2) + 1 # pegando o deslocamento
             polSubstituicao(i)
             print("Valor :",memoriaCache[i][7 * (inteiro) -1 :7 * (inteiro) + 7])
@@ -57,21 +58,29 @@ def leitura (endereco):
     if(aux == 0): # se for 0 não encontrou o bloco na cache
         global misses 
         misses = misses + 1
-        bloco = int(endereco[:5]) # descobrindo o numero do bloco
+        print("Miss!\n")
         i = conjunto * linConjunto
         while i <= conjunto * linConjunto + 1: #passa pelo conjunto da cache
             if memoriaCache[i][1] == "0": # se o valor for 0 quer dizer que é o mais antigo na cache
                 substituicao = i
             i = i + 1
-        i = (bloco * tamBloco) 
+        i = bloco * tamBloco
+        print("Bloco = ",bloco)
+        print("tam bloco",tamBloco)
 
         meudeus = "1"+"1"+str(format(bloco,'05b'))
-        while i < (bloco * tamBloco) + tamBloco :
+        while i < (bloco * tamBloco) + tamBloco:
+            print("i = ", i)
             meudeus = meudeus + str(format(memoriaPrincipal[i],'08b'))
 
             i += 1
         memoriaCache[substituicao] = meudeus
         polSubstituicao(substituicao)
+
+    print("Bloco da memória principal : ",bloco)
+    print("Conjunto : ",conjunto)
+    print("Linha do conjunto : ",substituicao)
+
         
         
 def Escrita(endereco):
@@ -109,25 +118,37 @@ def exibir():
     a = input("h para hexadecimal, d para decimal, b para Binário:")
     if(a == "h"):
         print("Memória principal")
-        for item in memoriaPrincipal:
-            print(format(item,'X'))
+        i = 0
+        while i < len(memoriaPrincipal):
+            print(format(i,'02X')," ",format(memoriaPrincipal[i],'02X'))
+            i = i + 1
         print("\n\nMemória Cache")
-        for item in memoriaCache:
-            print(format(int(item,2),'X'))
+        i = 0
+        while i < len(memoriaCache):
+            print(format(i,'X')," ",format(int(memoriaCache[i],2),'9X'))
+            i = i + 1
     elif(a == "d"):
         print("Memória principal")
-        for item in memoriaPrincipal:
-            print(format(item,'d'))
+        i = 0
+        while i < len(memoriaPrincipal):
+            print(format(i,'03d')," ",format(memoriaPrincipal[i],'03d'))
+            i = i + 1
         print("\n\nMemória Cache")
-        for item in memoriaCache:
-            print(format(int(item,2),'d'))
+        i = 0
+        while i < len(memoriaCache):
+            print(format(i,'01d')," ",format(int(memoriaCache[i],2),'012d'))
+            i = i + 1
     else:
         print("Memória principal")
-        for item in memoriaPrincipal:
-            print(format(item,'08b'))
+        i = 0
+        while i < len(memoriaPrincipal):
+            print(format(i,'07b')," ",format(memoriaPrincipal[i],'08b'))
+            i = i + 1
         print("\n\nMemória Cache")
-        for item in memoriaCache:
-            print(format(int(item,2),'039b'))
+        i = 0
+        while i < len(memoriaCache):
+            print(format(i,'03b')," ",format(int(memoriaCache[i],2),'039b'))
+            i = i + 1
  
 '''
 for item in memoriaPrincipal:    #printa em hexadecimal
