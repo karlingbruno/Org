@@ -35,13 +35,13 @@ def polSubstituicao(linha):
         vish = memoriaCache[linha-1][2:]
         aux2 = memoriaCache[linha-1][0]
         memoriaCache[linha - 1] = aux2 + str(0) + vish
-        
+
 
 def leitura (endereco):
     print(endereco)
     conjunto = int(endereco[3:5],2)
     bloco = int(endereco[:5],2) # descobrindo o numero do bloco
-    i = conjunto 
+    i = conjunto
     aux = 0
     while i <= conjunto + 1 : # passa pelo conjunto da cache
         if (str(memoriaCache[i][2:7]) == str(endereco[:5])) and (memoriaCache[i][0] == "1"): # se o endereço está na memória cache
@@ -56,7 +56,7 @@ def leitura (endereco):
         i = i + 1
 
     if(aux == 0): # se for 0 não encontrou o bloco na cache
-        global misses 
+        global misses
         misses = misses + 1
         print("Miss!\n")
         i = conjunto * linConjunto
@@ -81,13 +81,15 @@ def leitura (endereco):
     print("Conjunto : ",conjunto)
     print("Linha do conjunto : ",substituicao)
 
-        
-        
+
+
 def Escrita(endereco):
 
     leitura(endereco)
     escrever = input("Digite o valor a ser escrito na memória:")
+    escrever = int(escrever,2)
     memoriaPrincipal[int(endereco,2)] = escrever
+    escrever = format(escrever,'08b')
     conjunto = int(endereco[3:5],2)
     i = conjunto
     while i <= conjunto * 2 + 1:
@@ -98,13 +100,13 @@ def Escrita(endereco):
     inteiro = int(endereco[5:],2) + 1
     print("COnjunto :",conjunto)
     copia = memoriaCache[linha][:7 * (inteiro)]
-    copia2 = memoriaCache[linha][7 * (inteiro) + 7:]
+    copia2 = memoriaCache[linha][7 * (inteiro) + 8:]
     clear()
     memoriaCache[linha] = str(copia) + str(escrever) + str(copia2)
-    print("Valor escrito na memória\n\n")
+    print("Valor escrito na memória : ",str(escrever),"\n\n")
 
 
-        
+
 def stats():
     global hits
     global misses
@@ -112,7 +114,7 @@ def stats():
     print("Misses : ",misses)
     print("Porcentagem de acerto: ",100/(hits+misses) * hits,"%")
 
-            
+
 
 def exibir():
     a = input("h para hexadecimal, d para decimal, b para Binário:")
@@ -149,15 +151,13 @@ def exibir():
         while i < len(memoriaCache):
             print(format(i,'03b')," ",format(int(memoriaCache[i],2),'039b'))
             i = i + 1
- 
-'''
-for item in memoriaPrincipal:    #printa em hexadecimal
-   print(format(item,'02X))
-'''
+
+
+
 
 cond = 0
 while (cond != 5):
-    print('1 : Ler um endereço da memória\n2 : Escrever na memória\n3 : Apresentar as estatísticas\n4 : Printar memórias \n5 : Sair do programa') 
+    print('1 : Ler um endereço da memória\n2 : Escrever na memória\n3 : Apresentar as estatísticas\n4 : Printar memórias \n5 : Sair do programa')
     cond = input()
     print(cond)
     if cond == "1":
